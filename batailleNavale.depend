@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1606948769 source:c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\fichiers_manipulation\carte_id\bataillenavale\main.c
+	"define.h"
+
+1606948969 c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\fichiers_manipulation\carte_id\bataillenavale\define.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1606949175 source:c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\fichiers_manipulation\carte_id\bataillenavale\methodes.c
+	"define.h"
+	<windows.h>
+
