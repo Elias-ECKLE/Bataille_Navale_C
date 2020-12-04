@@ -31,7 +31,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="define.h" />
 		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="methodes.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions />

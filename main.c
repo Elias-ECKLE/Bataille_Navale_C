@@ -26,6 +26,7 @@ int main()
     joueur J1;
     joueur J2;
 
+
     J1.navires.tailleTorpilleur=TAILLE_Torpilleur;
     J1.navires.taillePorteAvion=TAILLE_PorteAvion;
     J1.navires.tailleContreTorpilleur=TAILLE_ContreTorpilleur;
@@ -37,6 +38,7 @@ int main()
     strcpy(J1.navires.nomContreTorpilleur,NOM_ContreTorpilleur);
     strcpy(J1.navires.nomSousMarin,NOM_SousMarin);
     strcpy(J1.navires.nomCroiseur,NOM_Croiseur);
+    strcpy(J1.nom,NOM_j1);
 
     J2.navires.tailleTorpilleur=TAILLE_Torpilleur;
     J2.navires.taillePorteAvion=TAILLE_PorteAvion;
@@ -49,6 +51,7 @@ int main()
     strcpy(J2.navires.nomContreTorpilleur,NOM_ContreTorpilleur);
     strcpy(J2.navires.nomSousMarin,NOM_SousMarin);
     strcpy(J2.navires.nomCroiseur,NOM_Croiseur);
+    strcpy(J2.nom,NOM_j2);
 
 
         //ETAT possible lors du jeu
@@ -93,7 +96,12 @@ int main()
 
         //J1
      maj_AffichMap(J1.grille, nbCar_map, tabGrad_Lettres, etatJeu.plcmt_Navires, etatJeu);
-     placementNavires(J1.grille,J1,nbCar_map,tabGrad_Lettres,etatJeu.plcmt_Navires,etatJeu);
+     placementNavires(J1.grille,J1,nbCar_map,tabGrad_Lettres,etatJeu.plcmt_Navires,etatJeu,VERTICAL,HORIZONTAL);
+
+        //J2
+     maj_AffichMap(J2.grille, nbCar_map, tabGrad_Lettres, etatJeu.plcmt_Navires, etatJeu);
+     placementNavires(J2.grille,J2,nbCar_map,tabGrad_Lettres,etatJeu.plcmt_Navires,etatJeu,VERTICAL,HORIZONTAL);
+     printf("top la");
 
 
 

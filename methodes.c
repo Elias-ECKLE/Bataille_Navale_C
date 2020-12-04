@@ -45,7 +45,7 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
 //afficher une graduation :
     //1à10
     for(i=0;i<TAILLE_Grille;i++){
-        gotoxy(i+2,0);
+        gotoxy(i+1,0);
         printf("%d",i+1);
     }
     //AàJ
@@ -67,11 +67,11 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
             for(j=0;j<TAILLE_Grille;j++){
 
                 if(grille[i][j]==car_chiffres.nbEau){
-                    gotoxy(i+2,j+1);
+                    gotoxy(i+1,j+1);
                     printf("%c",car_chiffres.carEau);
                 }
                 if(grille[i][j]==car_chiffres.nbBateau){
-                    gotoxy(i+2,j+1);
+                    gotoxy(i,j);
                     printf("%c",car_chiffres.carBateau);
                 }
                 if(grille[i][j]==car_chiffres.carBateauTouche){
@@ -134,9 +134,10 @@ void initMap(int grille[][TAILLE_Grille],int nbEau){
 
 
 
+//INIT POSE DES NAVIRES_________________________________________________________________
 
 
-void saisirCoords(coords *pCoords1, coords *pCoords2){
+void saisirCoords(coords *pCoords1, coords *pCoords2, char tabLettres[]){
 //BUT: Saisir les coordoonéees et transformer la coord lettre en chiffre avec un cas parmi
 //ENTREE:coords lettre et chiffre
 //SORTIE:coord chiffre et chiffre
@@ -144,25 +145,72 @@ void saisirCoords(coords *pCoords1, coords *pCoords2){
 
     char car_x1;
     char car_x2;
+    int test_y1;
+    int test_y2;
 
-    printf("Veuillez saisir les premieres coordoonees (ex:A1, E6 etc...)\n\N");
-    printf("Lettre: ");
-    scanf("%c",&car_x1);
-    getchar();
-    printf("Chiffre: ");
-    scanf("%d",&pCoords1->y);
-    printf("Veuillez saisir les deuxiemes coordoonees (ex:A3, E9 etc...)\n");
-    printf("Lettre: ");
-    scanf("%c",&car_x2);
-    getchar();
-    printf("\nChiffre: ");
-    scanf("%d",&pCoords2->y);
 
+    //coords 1--------------------------------------------------------------------
+            //coord x
+
+    printf("\n\nVeuillez saisir les premieres coordoonees (ex:A1, E6 etc...)\n\n");
+    do{
+        printf("Lettre comprise entre A et J: ");
+        getchar();
+        scanf("%c",&car_x1);
+        if((car_x1<tabLettres[0])||(car_x1>tabLettres[TAILLE_Grille-1])){
+           printf("Erreur, mauvaise lettre ou caractere. Veuillez reessayer\n ");
+        }
+    }while((car_x1<tabLettres[0])||(car_x1>tabLettres[TAILLE_Grille-1]));
+
+    getchar();
+
+            //coord y
+    do{
+        printf("Chiffre compris entre 1 et 10: ");
+        scanf("%d",&test_y1);
+        if((test_y1<1)||(test_y1>TAILLE_Grille)){
+           printf("Erreur, mauvaise chiffre ou caractere. Veuillez reessayer\n ");
+        }
+    }while((test_y1<1)||(test_y1>TAILLE_Grille));
+
+
+
+
+
+    //coords2 -----------------------------------------------------------------------
+    printf("\n\nVeuillez saisir les deuxiemes coordoonees (ex:A3, E9 etc...)\n");
+    do{
+        printf("Lettre comprise entre A et J: ");
+        getchar();
+        scanf("%c",&car_x2);
+        if((car_x2<tabLettres[0])||(car_x2>tabLettres[TAILLE_Grille-1])){
+           printf("Erreur, mauvaise lettre ou caractere. Veuillez reessayer\n ");
+        }
+    }while((car_x2<tabLettres[0])||(car_x2>tabLettres[TAILLE_Grille-1]));
+
+    getchar();
+
+            //coord y
+    do{
+        printf("Chiffre compris entre 1 et 10: ");
+        scanf("%d",&test_y2);
+        if((test_y2<1)||(test_y2>TAILLE_Grille)){
+           printf("Erreur, mauvaise chiffre ou caractere. Veuillez reessayer\n ");
+        }
+    }while((test_y2<1)||(test_y2>TAILLE_Grille));
+
+
+
+
+    //on recupere tout dans les pointeurs pCoords associés-----------------------------------------
     system("cls");
 
-    //on transforme les coords lettres en chiffres :
+        //on recupere les y :
+    pCoords1->y=test_y1;
+    pCoords2->y=test_y2;
+        //on transforme les coords lettres en chiffres :
 
-    //premiere coord
+        //premiere coord x
     switch(car_x1){
         case 'A':
             pCoords1->x=1;
@@ -199,7 +247,8 @@ void saisirCoords(coords *pCoords1, coords *pCoords2){
         break;
 
     }
-          //premiere coord
+          //deuxieme coord x
+
     switch(car_x2){
         case 'A':
             pCoords2->x=1;
@@ -237,7 +286,7 @@ void saisirCoords(coords *pCoords1, coords *pCoords2){
     }
 }
 
-void poseNavire(int grille[][TAILLE_Grille], int tailleNavire, int nbPoseNavire,coords coords1,coords coords2,int carSens){
+void poseNavire(int grille[][TAILLE_Grille], int tailleNavire, int nbPoseNavire,coords coords1,coords coords2,int carSens, char vertical, char horizontal){
 //BUT:Poser le navire sur la grille
 //ENTREE:grille,navire en question, chiffre du navire
 //SORTIE:navire sur la grille
@@ -250,70 +299,151 @@ void poseNavire(int grille[][TAILLE_Grille], int tailleNavire, int nbPoseNavire,
     int y2=coords2.y;
 
 
-    if(carSens==VERTICAL){
-        for(i=x1;i<x2;i++){
-            for(j=y1;j<y2;j++){
+    if(carSens==vertical){
 
-                grille[i][j]=nbPoseNavire;
-            }
+        for(i=x1;i<x2+1;i++){
+
+            grille[y1][i]=nbPoseNavire;
         }
     }
-    if(carSens==HORIZONTAL){
+    if(carSens==horizontal){
 
-        for(i=coords1.x;i<coords2.x;i++){
-            for(j=coords1.y;j<coords2.y;j++){
+        for(i=y1;i<y2+1;i++){
 
-                grille[j][i]=nbPoseNavire;
-            }
+            grille[i][x1]=nbPoseNavire;
+
+
         }
     }
 
 
 }
 
-void checkEmplacementNavire(){
-}
-void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase){
+int checkEmplacementNavire(int grille[][TAILLE_Grille], chiffresCaracts_Map chiffre_car,coords coords1, coords coords2, int tailleNavire, char sensPosition, char vertical, char horizontal){
+//BUT:vérifier si les coordoonees entrées correspondent à la taille du navire en question
+//ENTREE: taille du navires, coords, sens
 
+
+    int i;
+    int j;
+    int espaceLibre;
+    int x1=coords1.x;
+    int x2=coords2.x;
+    int y1=coords1.y;
+    int y2=coords2.y;
+    int empltVide=1;
+
+    //on regarde si les coordoonées prises collent à la place qu'il faut pour le bateau
+    if((sensPosition==vertical)){
+        espaceLibre=(x2-x1)+1;
+
+    }
+    if(sensPosition==horizontal){
+        espaceLibre=(y2-y1)+1;
+
+    }
+
+
+    //on regarde si chacune de ces cases sont bien vides et qu'il n'y a pas un bateau dessus
+    if(sensPosition==vertical){
+        for(i=x1;i<x2+1;i++){
+
+            if(grille[y1][i]==chiffre_car.nbBateau){
+                empltVide=0;
+            }
+        }
+    }
+    if(sensPosition==horizontal){
+        for(i=y1;i<y2+1;i++){
+
+            if(grille[i][x1]==chiffre_car.nbBateau){
+                empltVide=0;
+            }
+        }
+    }
+
+
+    //on retourne le feu vert ou rouge de la pose
+    if((espaceLibre==tailleNavire)&&(empltVide==1)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+
+
+}
+
+
+void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], int tailleNavire,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal){
 
     char car;
-
     coords coords1;
     coords coords2;
+    int emplmtNavire_valid=0;
 
-    //présentation
-    printf("Voici votre map\n Pour commencer le placement des différents navires, veuillez appuyer sur entree");
+    //navire---------------------------------------
+    do{
+        maj_AffichMap(grille,chiffre_car,tab_lettres,etat,etatBase);
+        printf("\n\n Le %s comprend %d cases.\n",nomNavire,tailleNavire);
+        printf("Voulez-vous le placer verticalement ou horizontalement ? (v->vertical/h->horizontal)\n");
+        scanf("%c",&car);
+        while((car!=vertical)&&(car!=horizontal)){
+            printf("Erreur, veuillez reessayer : \n");
+            //getchar();
+            scanf("%c",&car);
+        }
+        saisirCoords(&coords1,&coords2,tab_lettres);
+        emplmtNavire_valid=checkEmplacementNavire(grille, chiffre_car, coords1,coords2,tailleNavire,car,vertical,horizontal);
+        system("cls");
+    }while(emplmtNavire_valid==0);
+
+    poseNavire(grille,tailleNavire,chiffre_car.nbBateau,coords1,coords2,car,vertical,horizontal);
+
+
+}
+
+void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal){
+
+
+
+
+    //présentation-------------------------------------
+    printf("%s voici votre map\n Pour commencer le placement des différents navires, veuillez appuyer sur entree",Joueur.nom);
     getchar();
     system("cls");
 
-    //torpilleur
-    maj_AffichMap(grille,chiffre_car,tab_lettres,etat,etatBase);
-    printf("Le %s comprend %d cases.\n",Joueur.navires.nomTorpilleur,Joueur.navires.tailleTorpilleur);
-    printf("Voulez-vous le placer verticalement ou horizontalement ? (v->vertical/h->horizontal)\n");
-    scanf("%c",&car);
-    saisirCoords(&coords1,&coords2);
-    poseNavire(grille,Joueur.navires.tailleTorpilleur,chiffre_car.nbBateau,coords1,coords2,car);
+
+    //torpilleur---------------------------------------
+    choisirPlcmt_Navires(grille,Joueur.navires.nomTorpilleur, Joueur.navires.tailleTorpilleur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
 
 
     //porte avion
-    maj_AffichMap(grille,chiffre_car,tab_lettres,etat,etatBase);
-    printf("Le %s comprend %d cases.\n",Joueur.navires.nomPorteAvion,Joueur.navires.taillePorteAvion);
-    printf("Voulez-vous le placer verticalement ou horizontalement ? (v->vertical/h->horizontal)\n");
-    scanf("%c",&car);
-    saisirCoords(&coords1,&coords2);
-    poseNavire(grille,Joueur.navires.taillePorteAvion,chiffre_car.nbBateau,coords1,coords2,car);
+    choisirPlcmt_Navires(grille,Joueur.navires.nomPorteAvion, Joueur.navires.taillePorteAvion, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
 
+    //contre-torpilleur
+    choisirPlcmt_Navires(grille,Joueur.navires.nomContreTorpilleur, Joueur.navires.tailleContreTorpilleur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
 
-
-    //contre torpilleur
-
-
-
-    //sous marin
-
+    //Sous-marin
+    choisirPlcmt_Navires(grille,Joueur.navires.nomSousMarin, Joueur.navires.tailleSousMarin, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
 
     //croiseur
+    choisirPlcmt_Navires(grille,Joueur.navires.nomCroiseur, Joueur.navires.tailleCroiseur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
+    getchar();
+
 }
+
+
+/*
+//Phase d'attaque_________________________________________________________________________________
+void attaqueBateau(){
+
+    printf("Veuillez saisir un"):
+    //saisir coordoonée qu'on veut attaquer
+
+}
+
+*/
 
 
 
@@ -327,4 +457,3 @@ void maj_Map(){
 
 
 
-//CALCUL_________________________________________________________________________________

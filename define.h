@@ -18,6 +18,8 @@
 #define NOM_ContreTorpilleur "contre torpilleur"
 #define NOM_SousMarin "sous marin"
 #define NOM_Croiseur "croiseur"
+#define NOM_j1 "J1"
+#define NOM_j2 "J2"
 
 
 #define NB_EtatDebut 0
@@ -110,8 +112,11 @@ typedef struct joueur{
 
 
 extern void affichMsg_DebutFin(int etat, state etatBase);
+extern void initMap(int grille[][TAILLE_Grille],int nbEau);
 extern void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres, char tab_lettres[],int etat,state etatBase);
-extern void poseNavire(int grille[][TAILLE_Grille], int tailleNavire, int nbPoseNavire, coords coords1,coords coords2,int carSens);
-extern void placementNavires(int grille[][TAILLE_Grille], joueur Joueur, chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase);
+extern void poseNavire(int grille[][TAILLE_Grille], int tailleNavire, int nbPoseNavire,coords coords1,coords coords2,int carSens, char vertical, char horizontal);
+extern void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal);
+extern void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], int tailleNavire,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal);
+extern int checkEmplacementNavire(int grille[][TAILLE_Grille], chiffresCaracts_Map chiffre_car,coords coords1, coords coords2, int tailleNavire, char sensPosition, char vertical, char horizontal);
 
 #endif // DEFINE_H_INCLUDED
