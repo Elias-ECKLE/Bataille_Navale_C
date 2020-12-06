@@ -151,10 +151,10 @@ int main()
     affichMsg_DebutFin(etatJeu,etatJeuPossible);
 
     if(J1.victoire==1){
-        printf("\n\n\nLe joueur 1 a gagne la partie\n\n\n");
+        printf("\n\nLe joueur 1 a gagne la partie\n\n\n");
     }
     else if(J2.victoire==1){
-        printf("\n\n\nLe joueur 2 a gagne la partie\n\n\n");
+        printf("\n\nLe joueur 2 a gagne la partie\n\n\n");
     }
 
 

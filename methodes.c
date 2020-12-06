@@ -432,7 +432,7 @@ void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], int tail
 void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal){
 
     //présentation-------------------------------------
-    printf("%s voici votre map\n Pour commencer le placement des différents navires, veuillez appuyer sur entree",Joueur.nom);
+    printf("%s voici votre map\n Pour commencer le placement des differents navires, veuillez appuyer sur entree",Joueur.nom);
     getchar();
     system("cls");
 
@@ -443,7 +443,6 @@ void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_
 
     //porte avion
     choisirPlcmt_Navires(grille,Joueur.navires.nomPorteAvion, Joueur.navires.taillePorteAvion, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
-
     //contre-torpilleur
     choisirPlcmt_Navires(grille,Joueur.navires.nomContreTorpilleur, Joueur.navires.tailleContreTorpilleur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
 
