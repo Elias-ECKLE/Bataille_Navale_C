@@ -39,6 +39,7 @@ int main()
     strcpy(J1.navires.nomSousMarin,NOM_SousMarin);
     strcpy(J1.navires.nomCroiseur,NOM_Croiseur);
     strcpy(J1.nom,NOM_j1);
+    J1.victoire=0;
 
     J2.navires.tailleTorpilleur=TAILLE_Torpilleur;
     J2.navires.taillePorteAvion=TAILLE_PorteAvion;
@@ -52,6 +53,7 @@ int main()
     strcpy(J2.navires.nomSousMarin,NOM_SousMarin);
     strcpy(J2.navires.nomCroiseur,NOM_Croiseur);
     strcpy(J2.nom,NOM_j2);
+    J2.victoire=0;
 
 
         //ETAT possible lors du jeu
@@ -93,6 +95,8 @@ int main()
      affichMsg_DebutFin(etatJeu,etatJeuPossible);
 
 
+
+
     //----------------------------------------------------------------------------------
     //Placement des navires-------------------------------------------------------------
         etatJeu=etatJeuPossible.plcmt_Navires;
@@ -101,18 +105,57 @@ int main()
      maj_AffichMap(J1.grille, nbCar_map, tabGrad_Lettres, etatJeu, etatJeuPossible);
      placementNavires(J1.grille,J1,nbCar_map,tabGrad_Lettres,etatJeu,etatJeuPossible,VERTICAL,HORIZONTAL);
 
+
         //J2
      maj_AffichMap(J2.grille, nbCar_map, tabGrad_Lettres, etatJeu, etatJeuPossible);
+     getchar();
      placementNavires(J2.grille,J2,nbCar_map,tabGrad_Lettres,etatJeu,etatJeuPossible,VERTICAL,HORIZONTAL);
-     printf("top la");
+
+
 
 
 
     //Attaque l'une après l'autre : boucle tant qu'un des joueur n'a pas coulé tous les bateaux adverses
         etatJeu=etatJeuPossible.attq_Navires;
     do{
+        //J1 attque grille J2
+        attaqueBateau(J2.grille,J1,tabGrad_Lettres,nbCar_map,etatJeu,&etatJeu,etatJeuPossible);
 
-    }while(etatJeu!=etatJeuPossible.fin);
+        if(etatJeu==etatJeuPossible.fin){
+            J1.victoire=1;
+        }
+        else{
+            getchar();
+            getchar();
+
+            //J2 attaque grille J1
+            attaqueBateau(J1.grille,J2,tabGrad_Lettres,nbCar_map,etatJeu,&etatJeu,etatJeuPossible);
+            if(etatJeu==etatJeuPossible.fin){
+                J2.victoire=1;
+            }
+            getchar();
+            getchar();
+        }
+
+
+    }while((J1.victoire!=1)&&(J2.victoire!=1));
+
+
+
+
+
+
+
+    //FIN DU JEU_________________________________________________
+
+    affichMsg_DebutFin(etatJeu,etatJeuPossible);
+
+    if(J1.victoire==1){
+        printf("\n\n\nLe joueur 1 a gagne la partie\n\n\n");
+    }
+    else if(J2.victoire==1){
+        printf("\n\n\nLe joueur 2 a gagne la partie\n\n\n");
+    }
 
 
 

@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
+#include <windows.h> //biblio pr gotoxyd
 
 #define TAILLE_CAR 21
 #define TAILLE_Grille 10
@@ -108,8 +110,8 @@ typedef struct joueur{
 }joueur;
 
 
-
-
+extern void gotoxy(short x, short y);
+extern void Color(int couleurDuTexte,int couleurDeFond);
 
 extern void affichMsg_DebutFin(int etat, state etatBase);
 extern void initMap(int grille[][TAILLE_Grille],int nbEau);
@@ -122,9 +124,9 @@ extern void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], i
 extern int checkEmplacementNavire(int grille[][TAILLE_Grille], chiffresCaracts_Map chiffre_car,coords coords1, coords coords2, int tailleNavire, char sensPosition, char vertical, char horizontal);
 
 extern void saisirCoords_Attack(coords *pCoords, char tabLettres[]);
+extern void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCaracts_Map chiffre_car, char tab_Lettres[],int etatJeu, state etatPossible);
+extern void attaqueBateau(int grille[][TAILLE_Grille],joueur Joueur,char tab_Lettres[], chiffresCaracts_Map chiffres_Car, int etatJeu,int *pEtatJeu, state etatPossible);
 extern void checkBateaux_Restants(int grille[][TAILLE_Grille],chiffresCaracts_Map chiffre_car,state etatPossible, int *etat);
-extern void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCaracts_Map chiffre_car);
-extern void attaqueBateau(int grille[][TAILLE_Grille],char tab_Lettres[], chiffresCaracts_Map chiffres_Car, int *etatJeu, state etatPossible);
 
 
 #endif // DEFINE_H_INCLUDED

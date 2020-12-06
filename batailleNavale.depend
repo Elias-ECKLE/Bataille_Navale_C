@@ -11,15 +11,16 @@
 	"define.h"
 	<windows.h>
 
-1607255723 source:c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\bataillenavale\bataillenavale\bataille_navale\main.c
+1607275370 source:c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\bataillenavale\bataillenavale\bataille_navale\main.c
 	"define.h"
 
-1607255989 c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\bataillenavale\bataillenavale\bataille_navale\define.h
+1607275377 c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\bataillenavale\bataillenavale\bataille_navale\define.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
-
-1607257772 source:c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\bataillenavale\bataillenavale\bataille_navale\methodes.c
-	"define.h"
+	<conio.h>
 	<windows.h>
+
+1607275385 source:c:\algoracine\algoracinef2\codeblockf2\exos\semaine1_cycle1_2020-2021\bataillenavale\bataillenavale\bataille_navale\methodes.c
+	"define.h"
 

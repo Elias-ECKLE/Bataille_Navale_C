@@ -1,5 +1,5 @@
 #include "define.h"
-#include <windows.h> //biblio pr gotoxyd
+
 
 
 // Fonction qui permet de placer le curseur à la position x,y
@@ -9,6 +9,31 @@ void gotoxy(short x, short y)
 	HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD Pos={x,y};
 	SetConsoleCursorPosition(hConsole,Pos);
+}
+
+//color :
+/*
+0 : Noir
+1 : Bleu foncé
+2 : Vert foncé
+3 : Turquoise
+4 : Rouge foncé
+5 : Violet
+6 : Vert caca d'oie
+7 : Gris clair
+8 : Gris foncé
+9 : Bleu fluo
+10 : Vert fluo
+11 : Turquoise
+12 : Rouge fluo
+13 : Violet 2
+14 : Jaune
+15 : Blanc
+*/
+void Color(int couleurDuTexte,int couleurDeFond) // fonction d'affichage de couleurs
+{
+        HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(H,couleurDeFond*16+couleurDuTexte);
 }
 
 
@@ -32,7 +57,6 @@ void affichMsg_DebutFin(int etat, state etatBase){
 }
 
 
-
 void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres, char tab_lettres[],int etat,state etatBase){
 //BUT:Afficher en caractères la map de la grille du joueur en question
 //ENTREE:grille en question et état du jeu soit 1 pour placement des navires, soit 2 pour la phase d'attaque
@@ -44,8 +68,9 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
 
 //afficher une graduation :
     //1à10
+    Color(14,0);
     for(i=0;i<TAILLE_Grille;i++){
-        gotoxy(i+1,0);
+        gotoxy(i+2,0);
         printf("%d",i+1);
     }
     //AàJ
@@ -61,22 +86,21 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
  //deux possibilités : soit les caractères pour placer les navires,soit pour l'attque
 
     //caracts placement
+
     if(etat==etatBase.plcmt_Navires){
         for(i=0;i<TAILLE_Grille;i++){
 
             for(j=0;j<TAILLE_Grille;j++){
 
                 if(grille[i][j]==car_chiffres.nbEau){
-                    gotoxy(i+1,j+1);
+                    Color(9,0);
+                    gotoxy(i+2,j+1);
                     printf("%c",car_chiffres.carEau);
                 }
                 if(grille[i][j]==car_chiffres.nbBateau){
-                    gotoxy(i+1,j+1);
-                    printf("%c",car_chiffres.carBateau);
-                }
-                if(grille[i][j]==car_chiffres.carBateauTouche){
+                    Color(2,0);
                     gotoxy(i+2,j+1);
-                    printf("%c",car_chiffres.carBateauTouche);
+                    printf("%c",car_chiffres.carBateau);
                 }
             }
 
@@ -89,10 +113,12 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
             for(j=0;j<TAILLE_Grille;j++){
 
                 if(grille[i][j]==car_chiffres.nbBateauTouche){
+                    Color(4,0);
                     gotoxy(i+2,j+1);
                     printf("%c",car_chiffres.carBateauTouche);
                 }
                 else{
+                    Color(7,0);
                     gotoxy(i+2,j+1);
                     printf("%c",car_chiffres.carMasque);
                 }
@@ -101,6 +127,8 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
 
         }
     }
+
+    Color(15,0); //on remet par defaut la couleur
 
 
 }
@@ -113,7 +141,7 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
 
 
 
-//SAISIE_________________________________________________________________________________
+//INIT GRILLE DEBUT_________________________________________________________________________________
 
 void initMap(int grille[][TAILLE_Grille],int nbEau){
 //BUT:initialiser la map d'un joueur
@@ -135,7 +163,6 @@ void initMap(int grille[][TAILLE_Grille],int nbEau){
 
 
 //INIT POSE DES NAVIRES_________________________________________________________________
-
 
 void saisirCoords_Init(coords *pCoords1, coords *pCoords2, char tabLettres[]){
 //BUT: Saisir les coordoonéees et transformer la coord lettre en chiffre avec un cas parmi
@@ -374,7 +401,6 @@ int checkEmplacementNavire(int grille[][TAILLE_Grille], chiffresCaracts_Map chif
 
 }
 
-
 void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], int tailleNavire,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal){
 
     char car;
@@ -405,9 +431,6 @@ void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], int tail
 
 void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal){
 
-
-
-
     //présentation-------------------------------------
     printf("%s voici votre map\n Pour commencer le placement des différents navires, veuillez appuyer sur entree",Joueur.nom);
     getchar();
@@ -420,7 +443,7 @@ void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_
 
     //porte avion
     choisirPlcmt_Navires(grille,Joueur.navires.nomPorteAvion, Joueur.navires.taillePorteAvion, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
-    /*
+
     //contre-torpilleur
     choisirPlcmt_Navires(grille,Joueur.navires.nomContreTorpilleur, Joueur.navires.tailleContreTorpilleur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
 
@@ -429,14 +452,8 @@ void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_
 
     //croiseur
     choisirPlcmt_Navires(grille,Joueur.navires.nomCroiseur, Joueur.navires.tailleCroiseur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
-    */
-    getchar();
 
 }
-
-
-
-
 
 
 
@@ -453,10 +470,11 @@ void saisirCoords_Attack(coords *pCoords, char tabLettres[]){
     //coords 1--------------------------------------------------------------------
             //coord x
 
+            getchar();
+
     printf("\n\nVeuillez saisir la coordoonee que vous souhaitez attaquer (ex:A1, E6 etc...)\n\n");
     do{
         printf("Lettre comprise entre A et J: ");
-        getchar();
         scanf("%c",&car_x1);
         if((car_x1<tabLettres[0])||(car_x1>tabLettres[TAILLE_Grille-1])){
            printf("Erreur, mauvaise lettre ou caractere. Veuillez reessayer\n ");
@@ -477,7 +495,7 @@ void saisirCoords_Attack(coords *pCoords, char tabLettres[]){
 
 
     //on recupere tout dans les pointeurs pCoords associés-----------------------------------------
-    system("cls");
+
 
         //on recupere les y :
     pCoords->y=test_y1;
@@ -529,14 +547,14 @@ void checkBateaux_Restants(int grille[][TAILLE_Grille],chiffresCaracts_Map chiff
     int i;
     int j;
 
-    etat=etatPossible.fin;
+    *etat=etatPossible.fin;
 
     for(i=0;i<TAILLE_Grille;i++){
         for(j=0;j<TAILLE_Grille;j++){
 
             if(grille[i][j]==chiffre_car.nbBateau){
 
-                etat=etatPossible.attq_Navires;
+                *etat=etatPossible.attq_Navires;
             }
         }
     }
@@ -544,66 +562,12 @@ void checkBateaux_Restants(int grille[][TAILLE_Grille],chiffresCaracts_Map chiff
 
 }
 
-void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCaracts_Map chiffre_car){
+void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCaracts_Map chiffre_car, char tab_Lettres[],int etatJeu, state etatPossible){
 //BUT : checker si la case sur laquelle on attaque a bien un bateau : 3cas->rien du coup on affiche raté, un nbbateau du coup "touché", un nbBateau et plus aucuns autour du coup "touché coulé"
 
 
-    int x=coords1.x;
-    int y=coords1.y;
-
-
-
-/*
-    //touché
-    if(grille[x][y]==chiffre_car.nbBateau){
-
-        grille[x][y]=chiffre_car.nbBateauTouche;
-        printf("Touche");
-
-    }
-
-
-    //raté
-    if(grille[x][y]==chiffre_car.nbEau){
-
-        printf("Rate");
-    }
-
-
-    //touché coulé : on vérifie s'il y a une case bateau autour de la case attaquée, sinon cela veut dire que le bout touché était le dernier d'un bateau
-    if(){
-
-        //coord x-1
-        if(grille[x-1][y]==chiffre_car.nbEau){
-
-        }
-        if(grille[x+1][y]==chiffre_car.nbBateau){
-
-        }
-        if(grille[x][y-1]==chiffre_car.nbBateau){
-
-        }
-        if(grille[x][y+1]==chiffre_car.nbBateau){
-
-        }
-
-        //coord x+1
-
-        //coord y-1
-
-        //coord y+1
-        grille[y][x]=chiffre_car.nbBateauTouche;
-        printf("Touche coule");
-    }
-
-    //3 possibilités :
-
-        //raté avec 0 comme chiffre
-
-        //touche avec 1
-
-        //touche coulé avec 1 et plus aucun 1 après ça
-        */
+    int x=coords1.x-1;
+    int y=coords1.y-1;
 
 
 
@@ -620,27 +584,47 @@ void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCarac
                 if ((y>1) || (y<TAILLE_Grille)){
 
                     if((grille[y-1][x]==chiffre_car.nbBateau)||(grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
-                        printf("Touche");
+
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche");
                     }
-                    else
-                        printf("Touche...coule !");
+                    else{
+
+
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche...coule !");
+                    }
                 }
                 else if(y==1){
 
                     if ((grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
-                        printf("Touche");
+
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche");
                     }
                     else{
-                        printf("Touche...coule !");
+
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche...coule !");
                     }
                 }
                 else if (y==TAILLE_Grille){
 
                     if ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
-                        printf("Touche");
+
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche");
                     }
                     else{
-                        printf("Touche...coule !");
+
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche...coule !");
                     }
                 }
         }
@@ -652,30 +636,47 @@ void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCarac
                 if ((y>1) || (y<TAILLE_Grille)){
 
                      if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
-                           printf("Touche");
+
+                           grille[y][x]=chiffre_car.nbBateauTouche;
+                           maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                           printf("\nTouche");
                      }
                      else{
-                           printf("Touche...coule !");
+
+                           grille[y][x]=chiffre_car.nbBateauTouche;
+                           maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                           printf("\nTouche...coule !");
                      }
                 }
 
                 else if(y==1){
 
                       if ((grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
-                            printf("Touche");
+
+                            grille[y][x]=chiffre_car.nbBateauTouche;
+                            maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                            printf("\nTouche");
                       }
                       else{
-                            printf("Touche...coule !");
+
+                            grille[y][x]=chiffre_car.nbBateauTouche;
+                            maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                            printf("\nTouche...coule !");
                       }
                 }
 
                 else if (y==TAILLE_Grille){
 
                       if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
-                            printf("Touche");
+
+                            grille[y][x]=chiffre_car.nbBateauTouche;
+                            maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                            printf("\nTouche");
                       }
                      else{
-                            printf("Touche...coule !");
+                            grille[y][x]=chiffre_car.nbBateauTouche;
+                            maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                            printf("\nTouche...coule !");
                      }
                 }
 
@@ -687,33 +688,45 @@ void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCarac
               if ((y>1) || (y<TAILLE_Grille)){
                      if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau)){
 
-                         printf("Touche");
+                         grille[y][x]=chiffre_car.nbBateauTouche;
+                         maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                         printf("\nTouche");
                      }
                      else{
 
-                        printf("Touche...coule !");
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche...coule !");
                      }
               }
               else if (y==1){
 
                      if  ((grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau)){
 
-                        printf("Touche");
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche");
                      }
                      else{
 
-                        printf("Touche...coule !");
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche...coule !");
                      }
               }
               else if (y==TAILLE_Grille){
 
                      if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau)){
 
-                        printf("Touche");
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche");
                      }
                      else{
 
-                        printf("Touche...coule !");
+                        grille[y][x]=chiffre_car.nbBateauTouche;
+                        maj_AffichMap(grille,chiffre_car,tab_Lettres,etatJeu,etatPossible);
+                        printf("\nTouche...coule !");
                      }
               }
 
@@ -722,47 +735,37 @@ void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCarac
     }
     //si la position tiree ne correspond pas a un emplacement ou se trouve un 'X' et donc un bateau, alors on affiche raté au joueur
     else{
-        printf("Rate");
+        printf("\nRate");
     }
 
 
 
 }
 
-
-
-
-
-
-void attaqueBateau(int grille[][TAILLE_Grille],char tab_Lettres[], chiffresCaracts_Map chiffres_Car, int *etatJeu, state etatPossible){
+void attaqueBateau(int grille[][TAILLE_Grille],joueur Joueur,char tab_Lettres[], chiffresCaracts_Map chiffres_Car, int etatJeu,int *pEtatJeu, state etatPossible){
 
     coords coord;
 
-    printf("Veuillez saisir la ccordoonee ou vous voulez attaquer\n\n");
+
+    //on affiche la map cachée de l'adversaire
+    maj_AffichMap(grille,chiffres_Car,tab_Lettres,etatJeu,etatPossible);
+
+    printf("\n\n%s c'est l'heure d'attaquer",Joueur.nom);
+
 
 
     //saisir coordoonée qu'on veut attaquer
     saisirCoords_Attack(&coord,tab_Lettres);
 
     //on check si la coord touche un bateau ou non
-    checkCase_Attaque(grille,coord,chiffres_Car);
+    checkCase_Attaque(grille,coord,chiffres_Car,tab_Lettres,etatJeu,etatPossible);
 
     //et enfin on check s'il reste des bateaux à détruire ou non
     checkBateaux_Restants(grille,chiffres_Car,etatPossible,&etatJeu);
 
+
+    *pEtatJeu=etatJeu;
+
 }
-
-
-
-
-
-
-void maj_Map(){
-//BUT:mettre à jour l'emplacement des bateaux sur la grille
-//ENTREE:map du joueur en question
-//SORTIE: meme tableau
-}
-
-
 
 
