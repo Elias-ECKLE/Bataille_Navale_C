@@ -114,9 +114,17 @@ typedef struct joueur{
 extern void affichMsg_DebutFin(int etat, state etatBase);
 extern void initMap(int grille[][TAILLE_Grille],int nbEau);
 extern void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres, char tab_lettres[],int etat,state etatBase);
+
+
 extern void poseNavire(int grille[][TAILLE_Grille], int tailleNavire, int nbPoseNavire,coords coords1,coords coords2,int carSens, char vertical, char horizontal);
 extern void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal);
 extern void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], int tailleNavire,chiffresCaracts_Map chiffre_car, char tab_lettres[],int etat, state etatBase,char vertical, char horizontal);
 extern int checkEmplacementNavire(int grille[][TAILLE_Grille], chiffresCaracts_Map chiffre_car,coords coords1, coords coords2, int tailleNavire, char sensPosition, char vertical, char horizontal);
+
+extern void saisirCoords_Attack(coords *pCoords, char tabLettres[]);
+extern void checkBateaux_Restants(int grille[][TAILLE_Grille],chiffresCaracts_Map chiffre_car,state etatPossible, int *etat);
+extern void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCaracts_Map chiffre_car);
+extern void attaqueBateau(int grille[][TAILLE_Grille],char tab_Lettres[], chiffresCaracts_Map chiffres_Car, int *etatJeu, state etatPossible);
+
 
 #endif // DEFINE_H_INCLUDED

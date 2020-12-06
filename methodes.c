@@ -71,7 +71,7 @@ void maj_AffichMap(int grille[][TAILLE_Grille],chiffresCaracts_Map car_chiffres,
                     printf("%c",car_chiffres.carEau);
                 }
                 if(grille[i][j]==car_chiffres.nbBateau){
-                    gotoxy(i,j);
+                    gotoxy(i+1,j+1);
                     printf("%c",car_chiffres.carBateau);
                 }
                 if(grille[i][j]==car_chiffres.carBateauTouche){
@@ -137,7 +137,7 @@ void initMap(int grille[][TAILLE_Grille],int nbEau){
 //INIT POSE DES NAVIRES_________________________________________________________________
 
 
-void saisirCoords(coords *pCoords1, coords *pCoords2, char tabLettres[]){
+void saisirCoords_Init(coords *pCoords1, coords *pCoords2, char tabLettres[]){
 //BUT: Saisir les coordoonéees et transformer la coord lettre en chiffre avec un cas parmi
 //ENTREE:coords lettre et chiffre
 //SORTIE:coord chiffre et chiffre
@@ -301,16 +301,16 @@ void poseNavire(int grille[][TAILLE_Grille], int tailleNavire, int nbPoseNavire,
 
     if(carSens==vertical){
 
-        for(i=x1;i<x2+1;i++){
+        for(i=x1-1;i<x2;i++){
 
-            grille[y1][i]=nbPoseNavire;
+            grille[y1-1][i]=nbPoseNavire;
         }
     }
     if(carSens==horizontal){
 
-        for(i=y1;i<y2+1;i++){
+        for(i=y1-1;i<y2;i++){
 
-            grille[i][x1]=nbPoseNavire;
+            grille[i][x1-1]=nbPoseNavire;
 
 
         }
@@ -393,7 +393,7 @@ void choisirPlcmt_Navires(int grille[][TAILLE_Grille],char nomNavire[], int tail
             //getchar();
             scanf("%c",&car);
         }
-        saisirCoords(&coords1,&coords2,tab_lettres);
+        saisirCoords_Init(&coords1,&coords2,tab_lettres);
         emplmtNavire_valid=checkEmplacementNavire(grille, chiffre_car, coords1,coords2,tailleNavire,car,vertical,horizontal);
         system("cls");
     }while(emplmtNavire_valid==0);
@@ -420,7 +420,7 @@ void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_
 
     //porte avion
     choisirPlcmt_Navires(grille,Joueur.navires.nomPorteAvion, Joueur.navires.taillePorteAvion, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
-
+    /*
     //contre-torpilleur
     choisirPlcmt_Navires(grille,Joueur.navires.nomContreTorpilleur, Joueur.navires.tailleContreTorpilleur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
 
@@ -429,21 +429,330 @@ void placementNavires(int grille[][TAILLE_Grille],joueur Joueur,chiffresCaracts_
 
     //croiseur
     choisirPlcmt_Navires(grille,Joueur.navires.nomCroiseur, Joueur.navires.tailleCroiseur, chiffre_car, tab_lettres, etat, etatBase,vertical,horizontal);
+    */
     getchar();
 
 }
 
 
-/*
-//Phase d'attaque_________________________________________________________________________________
-void attaqueBateau(){
 
-    printf("Veuillez saisir un"):
-    //saisir coordoonée qu'on veut attaquer
+
+
+
+
+
+//PHASE ATTAQUE_________________________________________________________________________________
+
+void saisirCoords_Attack(coords *pCoords, char tabLettres[]){
+
+    char car_x1;
+    int test_y1;
+
+
+
+    //coords 1--------------------------------------------------------------------
+            //coord x
+
+    printf("\n\nVeuillez saisir la coordoonee que vous souhaitez attaquer (ex:A1, E6 etc...)\n\n");
+    do{
+        printf("Lettre comprise entre A et J: ");
+        getchar();
+        scanf("%c",&car_x1);
+        if((car_x1<tabLettres[0])||(car_x1>tabLettres[TAILLE_Grille-1])){
+           printf("Erreur, mauvaise lettre ou caractere. Veuillez reessayer\n ");
+        }
+    }while((car_x1<tabLettres[0])||(car_x1>tabLettres[TAILLE_Grille-1]));
+
+    getchar();
+
+            //coord y
+    do{
+        printf("Chiffre compris entre 1 et 10: ");
+        scanf("%d",&test_y1);
+        if((test_y1<1)||(test_y1>TAILLE_Grille)){
+           printf("Erreur, mauvaise chiffre ou caractere. Veuillez reessayer\n ");
+        }
+    }while((test_y1<1)||(test_y1>TAILLE_Grille));
+
+
+
+    //on recupere tout dans les pointeurs pCoords associés-----------------------------------------
+    system("cls");
+
+        //on recupere les y :
+    pCoords->y=test_y1;
+
+
+        //premiere coord x
+    switch(car_x1){
+        case 'A':
+            pCoords->x=1;
+        break;
+
+        case 'B':
+            pCoords->x=2;
+        break;
+
+        case 'C':
+            pCoords->x=3;
+        break;
+
+        case 'D':
+            pCoords->x=4;
+        break;
+        case 'E':
+            pCoords->x=5;
+        break;
+        case 'F':
+            pCoords->x=6;
+        break;
+        case 'G':
+            pCoords->x=7;
+        break;
+        case 'H':
+            pCoords->x=8;
+        break;
+        case 'I':
+            pCoords->x=9;
+        break;
+        case 'J':
+            pCoords->x=10;
+        break;
+
+    }
 
 }
 
-*/
+void checkBateaux_Restants(int grille[][TAILLE_Grille],chiffresCaracts_Map chiffre_car,state etatPossible, int *etat){
+//BUT : vérifier le nb de bateaux qui restent sur la map, si plus aucuns, fin de la partie
+
+    int i;
+    int j;
+
+    etat=etatPossible.fin;
+
+    for(i=0;i<TAILLE_Grille;i++){
+        for(j=0;j<TAILLE_Grille;j++){
+
+            if(grille[i][j]==chiffre_car.nbBateau){
+
+                etat=etatPossible.attq_Navires;
+            }
+        }
+    }
+
+
+}
+
+void checkCase_Attaque(int grille[][TAILLE_Grille],coords coords1, chiffresCaracts_Map chiffre_car){
+//BUT : checker si la case sur laquelle on attaque a bien un bateau : 3cas->rien du coup on affiche raté, un nbbateau du coup "touché", un nbBateau et plus aucuns autour du coup "touché coulé"
+
+
+    int x=coords1.x;
+    int y=coords1.y;
+
+
+
+/*
+    //touché
+    if(grille[x][y]==chiffre_car.nbBateau){
+
+        grille[x][y]=chiffre_car.nbBateauTouche;
+        printf("Touche");
+
+    }
+
+
+    //raté
+    if(grille[x][y]==chiffre_car.nbEau){
+
+        printf("Rate");
+    }
+
+
+    //touché coulé : on vérifie s'il y a une case bateau autour de la case attaquée, sinon cela veut dire que le bout touché était le dernier d'un bateau
+    if(){
+
+        //coord x-1
+        if(grille[x-1][y]==chiffre_car.nbEau){
+
+        }
+        if(grille[x+1][y]==chiffre_car.nbBateau){
+
+        }
+        if(grille[x][y-1]==chiffre_car.nbBateau){
+
+        }
+        if(grille[x][y+1]==chiffre_car.nbBateau){
+
+        }
+
+        //coord x+1
+
+        //coord y-1
+
+        //coord y+1
+        grille[y][x]=chiffre_car.nbBateauTouche;
+        printf("Touche coule");
+    }
+
+    //3 possibilités :
+
+        //raté avec 0 comme chiffre
+
+        //touche avec 1
+
+        //touche coulé avec 1 et plus aucun 1 après ça
+        */
+
+
+
+
+    //les si suivants prennent en compte toutes les possibilites de plantage. En effet, pour differencier le "touché" qui donc signifie que le bateau n'est pas totalement detruit du "touche coule"
+    //ou il ne reste plus rien du bateau, je verifie que les quatres cases entourant la position tirée sont egales a '1' ou non et en fct de cela j'en deduit si le bateau est entierement aneanti ou non
+    if(grille[y][x]==chiffre_car.nbBateau){
+
+
+        if ((x>1) || (x<TAILLE_Grille)){
+
+            //or comme certaines positions ne disposent pas de quatres cases les entourant (les coins par exemple), il faut en tenir compte lors de la verification des
+            // 'X' voisins et ainsi eviter le plantage du prog en placant des condtions
+                if ((y>1) || (y<TAILLE_Grille)){
+
+                    if((grille[y-1][x]==chiffre_car.nbBateau)||(grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
+                        printf("Touche");
+                    }
+                    else
+                        printf("Touche...coule !");
+                }
+                else if(y==1){
+
+                    if ((grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
+                        printf("Touche");
+                    }
+                    else{
+                        printf("Touche...coule !");
+                    }
+                }
+                else if (y==TAILLE_Grille){
+
+                    if ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
+                        printf("Touche");
+                    }
+                    else{
+                        printf("Touche...coule !");
+                    }
+                }
+        }
+
+
+
+        else if (x==1){
+
+                if ((y>1) || (y<TAILLE_Grille)){
+
+                     if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
+                           printf("Touche");
+                     }
+                     else{
+                           printf("Touche...coule !");
+                     }
+                }
+
+                else if(y==1){
+
+                      if ((grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
+                            printf("Touche");
+                      }
+                      else{
+                            printf("Touche...coule !");
+                      }
+                }
+
+                else if (y==TAILLE_Grille){
+
+                      if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y][x+1]==chiffre_car.nbBateau)){
+                            printf("Touche");
+                      }
+                     else{
+                            printf("Touche...coule !");
+                     }
+                }
+
+
+            }
+
+         else if (x==TAILLE_Grille){
+
+              if ((y>1) || (y<TAILLE_Grille)){
+                     if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau)){
+
+                         printf("Touche");
+                     }
+                     else{
+
+                        printf("Touche...coule !");
+                     }
+              }
+              else if (y==1){
+
+                     if  ((grille[y+1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau)){
+
+                        printf("Touche");
+                     }
+                     else{
+
+                        printf("Touche...coule !");
+                     }
+              }
+              else if (y==TAILLE_Grille){
+
+                     if  ((grille[y-1][x]==chiffre_car.nbBateau) || (grille[y][x-1]==chiffre_car.nbBateau)){
+
+                        printf("Touche");
+                     }
+                     else{
+
+                        printf("Touche...coule !");
+                     }
+              }
+
+         }
+
+    }
+    //si la position tiree ne correspond pas a un emplacement ou se trouve un 'X' et donc un bateau, alors on affiche raté au joueur
+    else{
+        printf("Rate");
+    }
+
+
+
+}
+
+
+
+
+
+
+void attaqueBateau(int grille[][TAILLE_Grille],char tab_Lettres[], chiffresCaracts_Map chiffres_Car, int *etatJeu, state etatPossible){
+
+    coords coord;
+
+    printf("Veuillez saisir la ccordoonee ou vous voulez attaquer\n\n");
+
+
+    //saisir coordoonée qu'on veut attaquer
+    saisirCoords_Attack(&coord,tab_Lettres);
+
+    //on check si la coord touche un bateau ou non
+    checkCase_Attaque(grille,coord,chiffres_Car);
+
+    //et enfin on check s'il reste des bateaux à détruire ou non
+    checkBateaux_Restants(grille,chiffres_Car,etatPossible,&etatJeu);
+
+}
+
+
 
 
 

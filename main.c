@@ -55,11 +55,13 @@ int main()
 
 
         //ETAT possible lors du jeu
-    state etatJeu;
-    etatJeu.debut=NB_EtatDebut;
-    etatJeu.fin=NB_EtatFin;
-    etatJeu.plcmt_Navires=NB_EtatPlacement;
-    etatJeu.attq_Navires=NB_EtatAttaque;
+    state etatJeuPossible;
+    etatJeuPossible.debut=NB_EtatDebut;
+    etatJeuPossible.fin=NB_EtatFin;
+    etatJeuPossible.plcmt_Navires=NB_EtatPlacement;
+    etatJeuPossible.attq_Navires=NB_EtatAttaque;
+
+    int etatJeu=etatJeuPossible.debut;
 
 
         //Chiffres et caractères pour remplir et afficher les tableaux
@@ -85,24 +87,32 @@ int main()
 
 
 
-
+    etatJeu=etatJeuPossible.debut;
     //__________________________________________________________________________________
     //Affichage debut __________________________________________________________________
-     affichMsg_DebutFin(etatJeu.debut,etatJeu);
+     affichMsg_DebutFin(etatJeu,etatJeuPossible);
 
 
     //----------------------------------------------------------------------------------
     //Placement des navires-------------------------------------------------------------
+        etatJeu=etatJeuPossible.plcmt_Navires;
 
         //J1
-     maj_AffichMap(J1.grille, nbCar_map, tabGrad_Lettres, etatJeu.plcmt_Navires, etatJeu);
-     placementNavires(J1.grille,J1,nbCar_map,tabGrad_Lettres,etatJeu.plcmt_Navires,etatJeu,VERTICAL,HORIZONTAL);
+     maj_AffichMap(J1.grille, nbCar_map, tabGrad_Lettres, etatJeu, etatJeuPossible);
+     placementNavires(J1.grille,J1,nbCar_map,tabGrad_Lettres,etatJeu,etatJeuPossible,VERTICAL,HORIZONTAL);
 
         //J2
-     maj_AffichMap(J2.grille, nbCar_map, tabGrad_Lettres, etatJeu.plcmt_Navires, etatJeu);
-     placementNavires(J2.grille,J2,nbCar_map,tabGrad_Lettres,etatJeu.plcmt_Navires,etatJeu,VERTICAL,HORIZONTAL);
+     maj_AffichMap(J2.grille, nbCar_map, tabGrad_Lettres, etatJeu, etatJeuPossible);
+     placementNavires(J2.grille,J2,nbCar_map,tabGrad_Lettres,etatJeu,etatJeuPossible,VERTICAL,HORIZONTAL);
      printf("top la");
 
+
+
+    //Attaque l'une après l'autre : boucle tant qu'un des joueur n'a pas coulé tous les bateaux adverses
+        etatJeu=etatJeuPossible.attq_Navires;
+    do{
+
+    }while(etatJeu!=etatJeuPossible.fin);
 
 
 
